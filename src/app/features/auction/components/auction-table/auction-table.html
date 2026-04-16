@@ -1,17 +1,41 @@
 <div class="table-container">
+  <div class="spotlight"></div>
 
-  <!-- Jugadores -->
-  <div class="player top">👤 P1</div>
-  <div class="player left">👤 P2</div>
-  <div class="player right">👤 P3</div>
-  <div class="player bottom">🧑 Tú</div>
-
-  <!-- Mesa -->
-  <div class="table">
-    <div class="center">
-      <h2>💰 ${{ price }}</h2>
-      <p [class.danger]="time < 10">⏱️ {{ time }}s</p>
-    </div>
+  <div class="player top">
+    <span class="chair"></span>
+    <span class="avatar avatar-1">A</span>
+    <span class="name">Rival A</span>
+  </div>
+  <div class="player left">
+    <span class="chair"></span>
+    <span class="avatar avatar-2">B</span>
+    <span class="name">Rival B</span>
+  </div>
+  <div class="player right">
+    <span class="chair"></span>
+    <span class="avatar avatar-3">C</span>
+    <span class="name">Rival C</span>
+  </div>
+  <div class="player bottom">
+    <span class="chair"></span>
+    <span class="avatar avatar-you">T</span>
+    <span class="name">Tu asiento</span>
   </div>
 
+  <div class="table">
+    <div class="table-inner">
+      <div class="pot-label">Puja actual</div>
+      <h2 class="pot-value">${{ price }}</h2>
+
+      <p class="timer" [class.danger]="time < 10">
+        {{ time < 10 ? 'Ultimos segundos' : 'Tiempo restante' }}: {{ time }}s
+      </p>
+
+      <div class="chips">
+        <span class="chip chip-red"></span>
+        <span class="chip chip-blue"></span>
+        <span class="chip chip-gold"></span>
+      </div>
+    </div>
+  </div>
 </div>

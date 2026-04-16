@@ -1,10 +1,22 @@
-<h1>Live Bid Arena</h1>
+<section class="arena-page">
+  <div class="starfield"></div>
+  <div class="starfield starfield-mid"></div>
+  <div class="starfield starfield-near"></div>
+  <div class="ambient ambient-left"></div>
+  <div class="ambient ambient-right"></div>
 
-<app-auction-table
-  [price]="(currentPrice$ | async)!"
-  [time]="(timeLeft$ | async)!"
-></app-auction-table>
+  <header class="arena-header">
+    <p class="kicker">Live Bid Arena</p>
+    <h1>Mesa de Subastas Pro</h1>
+    <p class="subtitle">Tension de poker, ritmo en tiempo real y pujas al limite.</p>
+  </header>
 
-<app-bid-console
-  (bid)="bid($event)"
-></app-bid-console>
+  <app-auction-table
+    [price]="(currentPrice$ | async)!"
+    [time]="(timeLeft$ | async)!"
+  ></app-auction-table>
+
+  <app-bid-console
+    (bid)="bid($event)"
+  ></app-bid-console>
+</section>
