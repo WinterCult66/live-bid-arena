@@ -1,0 +1,63 @@
+.table-container {
+  position: relative;
+  width: 500px;
+  height: 350px;
+  margin: 40px auto;
+}
+
+/* Mesa */
+.table {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, #2e7d32, #1b5e20);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* Centro */
+.center {
+  text-align: center;
+  color: white;
+}
+
+.danger {
+  color: red;
+  font-weight: bold;
+}
+
+/* Jugadores */
+.player {
+  position: absolute;
+  color: white;
+  background: #333;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+/* Posiciones */
+.top {
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.left {
+  left: -60px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.right {
+  right: -60px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.bottom {
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+}

@@ -1,9 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-auction-table',
-  imports: [],
+  standalone: true,
   templateUrl: './auction-table.html',
-  styleUrl: './auction-table.css',
+  styleUrl: './auction-table.css'
 })
-export class AuctionTable {}
+export class AuctionTableComponent {
+  @Input() price!: number;
+  @Input() time!: number;
+}

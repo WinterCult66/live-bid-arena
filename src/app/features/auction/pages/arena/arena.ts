@@ -3,12 +3,15 @@ import { Store } from '@ngrx/store';
 import { Observable, interval } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
+import { BidConsoleComponent } from '../../components/bid-console/bid-console';
+import { AuctionTableComponent } from '../../components/auction-table/auction-table';
+
 import { placeBid, updateTimer } from '../../../../store/auction.actions';
 
 @Component({
   selector: 'app-arena',
   standalone: true,
-  imports: [AsyncPipe],
+  imports: [AsyncPipe, BidConsoleComponent, AuctionTableComponent],
   templateUrl: './arena.html',
   styleUrl: './arena.css',
 })

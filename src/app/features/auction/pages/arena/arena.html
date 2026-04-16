@@ -1,8 +1,10 @@
 <h1>Live Bid Arena</h1>
 
-<p>💰 Precio: {{ currentPrice$ | async }}</p>
-<p>⏱️ Tiempo: {{ timeLeft$ | async }}</p>
+<app-auction-table
+  [price]="(currentPrice$ | async)!"
+  [time]="(timeLeft$ | async)!"
+></app-auction-table>
 
-<button (click)="bid(10)">+10</button>
-<button (click)="bid(50)">+50</button>
-<button (click)="bid(100)">+100</button>
+<app-bid-console
+  (bid)="bid($event)"
+></app-bid-console>
