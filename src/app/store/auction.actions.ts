@@ -1,10 +1,14 @@
 import { createAction, props } from '@ngrx/store';
 
 export const placeBid = createAction(
-  '[Auction] Place Bid',
-  props<{ amount: number }>()
+  '[Auction] PLACE_BID',
+  props<{ amount: number; bidder: string }>()
 );
 
-export const updateTimer = createAction(
-  '[Auction] Update Timer'
+export const timerTick = createAction(
+  '[Auction] TIMER_TICK'
+);
+
+export const finishAuction = createAction(
+  '[Auction] FINISH_AUCTION'
 );

@@ -1,0 +1,11 @@
+<aside
+  class="auction-clock"
+  [class.critical]="timeLeft < 10 && status === 'ACTIVE'"
+  [class.finished]="status === 'FINISHED'"
+>
+  <p class="clock-label">Tiempo de cierre</p>
+  <p class="clock-value">{{ timeLeft }}s</p>
+  <p class="clock-hint">
+    {{ status === 'FINISHED' ? 'Subasta cerrada' : 'Haz tu puja antes de que llegue a cero' }}
+  </p>
+</aside>

@@ -11,12 +11,28 @@
     <p class="subtitle">Tension de poker, ritmo en tiempo real y pujas al limite.</p>
   </header>
 
+  <app-auction-clock
+    [timeLeft]="(timeLeft$ | async)!"
+    [status]="(status$ | async)!"
+  ></app-auction-clock>
+
+  <aside class="debug-panel">
+    <p class="debug-title">Debug Flux</p>
+    <p>Estado: <strong>{{ (status$ | async) }}</strong></p>
+    <p>Tiempo: <strong>{{ (timeLeft$ | async) }}s</strong></p>
+    <p>Precio: <strong>${{ (price$ | async) }}</strong></p>
+    <p>Ultimo postor: <strong>{{ (lastBidder$ | async) }}</strong></p>
+  </aside>
+
   <app-auction-table
-    [price]="(currentPrice$ | async)!"
-    [time]="(timeLeft$ | async)!"
+    [price]="(price$ | async)!"
+    [status]="(status$ | async)!"
+    [lastBidder]="(lastBidder$ | async)!"
   ></app-auction-table>
 
   <app-bid-console
+    [isDisabled]="(status$ | async) === 'FINISHED'"
+    [status]="(status$ | async)!"
     (bid)="bid($event)"
   ></app-bid-console>
 </section>

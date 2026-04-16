@@ -8,5 +8,6 @@ import { Component, Input } from '@angular/core';
 })
 export class AuctionTableComponent {
   @Input() price!: number;
-  @Input() time!: number;
+  @Input() status: 'ACTIVE' | 'FINISHED' = 'ACTIVE';
+  @Input() lastBidder = '';
 }

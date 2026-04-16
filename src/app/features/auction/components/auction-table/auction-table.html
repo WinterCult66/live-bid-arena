@@ -26,16 +26,15 @@
     <div class="table-inner">
       <div class="pot-label">Puja actual</div>
       <h2 class="pot-value">${{ price }}</h2>
-
-      <p class="timer" [class.danger]="time < 10">
-        {{ time < 10 ? 'Ultimos segundos' : 'Tiempo restante' }}: {{ time }}s
+      <p class="status" [class.finished]="status === 'FINISHED'">
+        Estado: {{ status }}
       </p>
 
-      <div class="chips">
-        <span class="chip chip-red"></span>
-        <span class="chip chip-blue"></span>
-        <span class="chip chip-gold"></span>
-      </div>
+      @if (status === 'FINISHED') {
+        <p class="winner">🏆 Ganador: {{ lastBidder }}</p>
+      } @else {
+        <p class="leader">Lider actual: {{ lastBidder }}</p>
+      }
     </div>
   </div>
 </div>

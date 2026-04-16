@@ -92,11 +92,11 @@
 .arena-header {
   position: relative;
   text-align: center;
-  max-width: 720px;
+  max-width: 800px;
   margin: 0 auto 1.5rem;
-  padding: 1.1rem 1.4rem;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(22, 26, 35, 0.56);
+  padding: 1.35rem 1.6rem;
+  border: 1px solid rgba(170, 221, 255, 0.22);
+  background: rgba(18, 23, 37, 0.62);
   box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
   border-radius: 1rem;
   backdrop-filter: blur(9px);
@@ -105,21 +105,62 @@
 .kicker {
   margin: 0;
   letter-spacing: 0.18em;
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   text-transform: uppercase;
-  color: #a3c6ff;
+  color: #8de9ff;
 }
 
 h1 {
   margin: 0.45rem 0 0.25rem;
-  font-size: clamp(1.6rem, 2.5vw, 2.4rem);
+  font-size: clamp(2.15rem, 3.6vw, 3.3rem);
   font-weight: 800;
-  text-shadow: 0 0 22px rgba(102, 243, 255, 0.3);
+  text-shadow:
+    0 0 20px rgba(112, 242, 255, 0.45),
+    0 0 36px rgba(187, 110, 255, 0.36);
 }
 
 .subtitle {
   margin: 0;
-  color: rgba(244, 248, 255, 0.86);
+  font-size: 1rem;
+  color: rgba(244, 248, 255, 0.92);
+}
+
+.debug-panel {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 20;
+  width: min(88vw, 250px);
+  padding: 0.7rem 0.8rem;
+  border-radius: 0.8rem;
+  border: 1px solid rgba(169, 214, 255, 0.35);
+  background: rgba(6, 10, 17, 0.78);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
+}
+
+.debug-title {
+  margin: 0 0 0.45rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #8fd4ff;
+}
+
+.debug-panel p {
+  margin: 0.2rem 0;
+  font-size: 0.9rem;
+  color: #dbefff;
+}
+
+@media (max-width: 640px) {
+  .debug-panel {
+    top: auto;
+    bottom: 1rem;
+    right: 0.6rem;
+    left: 0.6rem;
+    width: auto;
+  }
 }
 
 @keyframes pulse {

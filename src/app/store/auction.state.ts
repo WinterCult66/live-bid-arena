@@ -1,5 +1,6 @@
 export interface AuctionState {
-  currentPrice: number;
-  highestBidder: string;
+  price: number;
+  lastBidder: string;
   timeLeft: number;
+  status: 'ACTIVE' | 'FINISHED';
 }

@@ -1,14 +1,16 @@
 <div class="console">
-  <p class="title">Haz tu jugada</p>
+  <p class="title">
+    {{ status === 'FINISHED' ? 'Subasta finalizada' : 'Haz tu jugada' }}
+  </p>
 
   <div class="actions">
-    <button class="bid-button bid-10" (click)="bid.emit(10)">
+    <button class="bid-button bid-10" (click)="bid.emit(10)" [disabled]="isDisabled">
       +10
     </button>
-    <button class="bid-button bid-50" (click)="bid.emit(50)">
+    <button class="bid-button bid-50" (click)="bid.emit(50)" [disabled]="isDisabled">
       +50
     </button>
-    <button class="bid-button bid-100" (click)="bid.emit(100)">
+    <button class="bid-button bid-100" (click)="bid.emit(100)" [disabled]="isDisabled">
       +100
     </button>
   </div>
