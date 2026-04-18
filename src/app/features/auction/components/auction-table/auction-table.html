@@ -49,21 +49,7 @@
         <p class="pot-meta">
           Sobre la base ${{ initialBid }}, el precio subió
           <strong>${{ tableIncrementTotal }}</strong>
-          <span class="pot-meta-hint">(suma de los incrementos de la ronda; no es un pozo compartido: cada uno descuenta solo lo que pujó)</span>
         </p>
-        @if (yourSpent != null) {
-          @if (youAreWinningBidder) {
-            <p class="pot-you">
-              <strong>Mejor postor:</strong> la subida acumulada del precio es
-              <strong>${{ tableIncrementTotal }}</strong>
-              <span class="pot-you-detail">· De tu saldo se descontaron <strong>${{ yourSpent }}</strong> en incrementos (lo demás lo subieron otros antes).</span>
-            </p>
-          } @else {
-            <p class="pot-you">
-              Tu aporte en incrementos desde <strong>tu saldo</strong>: ${{ yourSpent }}
-            </p>
-          }
-        }
       }
       <p class="status" [class.finished]="phase === 'FINISHED'">
         Estado: {{ statusLabel() }}

@@ -19,10 +19,11 @@ export interface AuctionState {
   phase: RoomPhase;
   status: AuctionUiStatus;
   participants: string[];
-  /** Solo tu jugador (viene en cada mensaje STATE personalizado por WebSocket). */
+  /** Suma de incrementos que pujaste vos (solo referencia, no define el “disponible”). */
   yourSpent: number | null;
-  /** Puja inicial de la mesa + tus incrementos (comprometido de tu saldo en esta mesa). */
+  /** min(saldo catálogo, precio mesa): referencia UI frente al precio. */
   yourCommittedTotal: number | null;
+  /** Saldo catálogo − precio actual de mesa: baja cuando cualquier jugador sube el precio. */
   yourRemaining: number | null;
   connection: AuctionConnection;
   wsError: string | null;

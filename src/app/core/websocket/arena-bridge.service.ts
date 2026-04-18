@@ -8,7 +8,7 @@ import { AppState } from '../../store/app.state';
 
 /**
  * Puente WebSocket → NgRx: el servidor controla fases LOBBY/LIVE, timers y pujas.
- * Cada cliente recibe solo sus campos yourSpent / yourRemaining (no el saldo de los demás).
+ * Campos por cliente: yourSpent (tus incrementos), yourRemaining (saldo − precio mesa), etc.
  */
 @Injectable({ providedIn: 'root' })
 export class ArenaBridgeService {

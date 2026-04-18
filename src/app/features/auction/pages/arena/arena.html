@@ -5,8 +5,6 @@
   <div class="ambient ambient-left"></div>
   <div class="ambient ambient-right"></div>
 
-  <a class="back-to-lobby" routerLink="/">← Lobby</a>
-
   <header class="arena-header">
     <p class="kicker">Live Bid Arena</p>
     @if (auction$ | async; as a) {
@@ -16,29 +14,17 @@
     }
     @if (auction$ | async; as a) {
       @if (currentPlayer$ | async; as me) {
-        <p class="subtitle wallet-private">
-          <strong>{{ me.name }}</strong>
-          · Saldo catálogo ${{ me.balance }}
-          · Reservado puja inicial ${{ a.initialBid }}
-          @if (a.phase === 'LIVE' || a.phase === 'FINISHED') {
-            · <span class="price-rise">Subida del precio desde la base: ${{ subidaPrecioDesdeBase(a) }}</span>
-            <span class="hint-individual">(no es un fondo común: cada jugador paga solo sus pujas desde su saldo)</span>
-          }
-          @if (a.yourSpent != null || a.yourCommittedTotal != null) {
-            · <span class="committed">Comprometido de tu saldo (inicial + tus incrementos): ${{ committedInTable(a) }}</span>
-          }
-          @if (a.yourSpent != null) {
-            @if (isUltimoPostor(a, me)) {
-              · <span class="you-lead">Como mejor postor, la subida acumulada del precio es ${{ subidaPrecioDesdeBase(a) }}</span>
-              · <span class="you-only">Descontado de tu saldo en incrementos (solo lo tuyo): ${{ a.yourSpent }}</span>
-            } @else {
-              · <span class="you-only">Tu aporte en incrementos desde tu saldo: ${{ a.yourSpent }}</span>
-            }
-          }
-          @if (a.yourRemaining != null || a.yourSpent != null || a.initialBid > 0) {
-            · <span class="remain">Disponible para seguir pujando ${{ remainingForBids(a, me) }}</span>
-          }
-        </p>
+        @if (a.phase === 'LIVE' || a.phase === 'FINISHED') {
+          <p class="subtitle wallet-private">
+            <strong>{{ me.name }}</strong>
+            · Descontado de tu saldo en incrementos (solo lo tuyo): ${{ a.yourSpent ?? 0 }}
+            · Disponible para seguir pujando ${{ remainingForBids(a, me) }}
+          </p>
+        } @else {
+          <p class="subtitle wallet-private">
+            <strong>{{ me.name }}</strong>
+          </p>
+        }
       } @else {
         <p class="subtitle">Cargando perfil…</p>
       }
@@ -66,18 +52,20 @@
     ></app-auction-clock>
   }
 
-  <aside class="debug-panel">
-    <p class="debug-title">Estado Flux (servidor)</p>
-    @if (auction$ | async; as a) {
-      <p>WS: <strong>{{ a.connection }}</strong></p>
-      <p>Fase: <strong>{{ a.phase }}</strong></p>
-      <p>Estado: <strong>{{ a.status }}</strong></p>
-      <p>Lobby: <strong>{{ a.lobbyTimeLeft }}s</strong></p>
-      <p>Ronda: <strong>{{ a.timeLeft }}s</strong></p>
-      <p>Precio: <strong>${{ a.price }}</strong></p>
-      <p>Ultimo postor: <strong>{{ a.lastBidder }}</strong></p>
-    }
-  </aside>
+  @if (showFluxDebug) {
+    <aside class="debug-panel">
+      <p class="debug-title">Estado Flux (servidor)</p>
+      @if (auction$ | async; as a) {
+        <p>WS: <strong>{{ a.connection }}</strong></p>
+        <p>Fase: <strong>{{ a.phase }}</strong></p>
+        <p>Estado: <strong>{{ a.status }}</strong></p>
+        <p>Lobby: <strong>{{ a.lobbyTimeLeft }}s</strong></p>
+        <p>Ronda: <strong>{{ a.timeLeft }}s</strong></p>
+        <p>Precio: <strong>${{ a.price }}</strong></p>
+        <p>Ultimo postor: <strong>{{ a.lastBidder }}</strong></p>
+      }
+    </aside>
+  }
 
   @if (auction$ | async; as a) {
     @if (currentPlayer$ | async; as me) {
@@ -85,7 +73,6 @@
         [price]="a.price"
         [initialBid]="a.initialBid"
         [tableIncrementTotal]="a.tableIncrementTotal || (a.price - a.initialBid)"
-        [yourSpent]="a.yourSpent"
         [phase]="a.phase"
         [lastBidder]="a.lastBidder"
         [seatTop]="seatLayout(a, me).top"
@@ -93,18 +80,6 @@
         [seatRight]="seatLayout(a, me).right"
         [youName]="me.name"
       ></app-auction-table>
-    }
-  }
-
-  @if (auction$ | async; as a) {
-    @if (a.phase === 'FINISHED') {
-      @if (currentPlayer$ | async; as me) {
-        <div class="finished-actions">
-          <a class="btn-back-lobby" [routerLink]="['/']" [queryParams]="{ playerId: me.id }">
-            Volver al lobby
-          </a>
-        </div>
-      }
     }
   }
 
