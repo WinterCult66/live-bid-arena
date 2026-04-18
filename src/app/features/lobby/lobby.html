@@ -1,0 +1,57 @@
+<section class="lobby-page">
+  <div class="starfield"></div>
+  <div class="starfield starfield-mid"></div>
+  <div class="ambient ambient-left"></div>
+  <div class="ambient ambient-right"></div>
+
+  <header class="lobby-header">
+    <p class="kicker">Live Bid Arena</p>
+    <h1>Lobby</h1>
+    <p class="subtitle">Elegí una mesa. Tu perfil viene de <code>?playerId=</code> (por defecto 1).</p>
+  </header>
+
+  @if (lobby$ | async; as lobby) {
+    @if (lobby.loading) {
+      <p class="state-msg">Cargando subastas…</p>
+    } @else if (lobby.error) {
+      <p class="state-msg error">{{ lobby.error }}</p>
+    } @else {
+      <div class="player-banner">
+        <span class="label">Jugando como</span>
+        <strong>{{ lobby.currentPlayer?.name }}</strong>
+        <span class="balance">Saldo ${{ lobby.currentPlayer?.balance }}</span>
+      </div>
+
+      <div class="admin-bar">
+        <button
+          type="button"
+          class="btn-reset"
+          (click)="resetServerState()"
+          [disabled]="resetting()"
+        >
+          {{ resetting() ? 'Reiniciando…' : 'Reiniciar mesas (servidor)' }}
+        </button>
+        @if (resetMessage(); as msg) {
+          <span class="reset-msg">{{ msg }}</span>
+        }
+      </div>
+
+      <div class="lot-grid">
+        @for (lot of lobby.auctions; track lot.id) {
+          <article class="lot-card">
+            <h2>{{ lot.name }}</h2>
+            <p class="lot-meta">Puja inicial <strong>${{ lot.initialBid }}</strong></p>
+            <p class="lot-status">{{ lot.status }}</p>
+            <a
+              class="lot-cta"
+              [routerLink]="['/auction', lot.id]"
+              [queryParams]="{ playerId: lobby.currentPlayer?.id }"
+            >
+              Entrar a la mesa
+            </a>
+          </article>
+        }
+      </div>
+    }
+  }
+</section>

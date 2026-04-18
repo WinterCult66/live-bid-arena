@@ -1,11 +1,20 @@
 <aside
   class="auction-clock"
-  [class.critical]="timeLeft < 10 && status === 'ACTIVE'"
-  [class.finished]="status === 'FINISHED'"
+  [class.critical]="bidCritical"
+  [class.finished]="isFinished"
+  [class.lobby-mode]="showLobby"
 >
-  <p class="clock-label">Tiempo de cierre</p>
-  <p class="clock-value">{{ timeLeft }}s</p>
-  <p class="clock-hint">
-    {{ status === 'FINISHED' ? 'Subasta cerrada' : 'Haz tu puja antes de que llegue a cero' }}
-  </p>
+  @if (showLobby) {
+    <p class="clock-label">Sala de espera</p>
+    <p class="clock-value">{{ lobbyTimeLeft }}s</p>
+    <p class="clock-hint">Esperando jugadores: hacen falta al menos 2 para iniciar la subasta.</p>
+  } @else if (showBid) {
+    <p class="clock-label">Tiempo de cierre</p>
+    <p class="clock-value">{{ bidTimeLeft }}s</p>
+    <p class="clock-hint">Haz tu puja antes de que llegue a cero</p>
+  } @else {
+    <p class="clock-label">Subasta</p>
+    <p class="clock-value">—</p>
+    <p class="clock-hint">Subasta cerrada</p>
+  }
 </aside>

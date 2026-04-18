@@ -1,7 +1,7 @@
 :host {
   position: fixed;
   top: 1rem;
-  left: 1rem;
+  left: 2.45rem;
   z-index: 22;
   width: min(90vw, 360px);
 }
@@ -47,20 +47,32 @@
 }
 
 .auction-clock.critical {
-  border-color: rgba(255, 141, 171, 0.75);
+  border-color: rgba(255, 120, 160, 0.92);
   box-shadow:
-    0 16px 35px rgba(0, 0, 0, 0.45),
-    0 0 36px rgba(255, 92, 148, 0.65),
-    0 0 58px rgba(255, 70, 124, 0.38),
-    inset 0 0 20px rgba(255, 132, 176, 0.35);
-  animation: clockCritical 0.95s ease-in-out infinite;
+    0 20px 42px rgba(0, 0, 0, 0.52),
+    0 0 48px rgba(255, 72, 120, 0.78),
+    0 0 72px rgba(255, 40, 90, 0.45),
+    inset 0 0 26px rgba(255, 110, 150, 0.42);
+  animation: clockCritical 0.52s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+.auction-clock.critical .clock-label {
+  color: #ffc2d4;
+  letter-spacing: 0.16em;
+}
+
+.auction-clock.critical .clock-hint {
+  color: rgba(255, 214, 224, 0.95);
 }
 
 .auction-clock.critical .clock-value {
-  color: #ffe2eb;
+  font-size: clamp(3.65rem, 9.5vw, 6.25rem);
+  color: #fff0f4;
   text-shadow:
-    0 0 14px rgba(255, 104, 155, 0.8),
-    0 0 24px rgba(255, 58, 130, 0.65);
+    0 0 18px rgba(255, 90, 140, 0.95),
+    0 0 32px rgba(255, 50, 110, 0.85),
+    0 0 48px rgba(255, 30, 80, 0.55);
+  animation: criticalDigit 0.52s cubic-bezier(0.45, 0, 0.55, 1) infinite;
 }
 
 .auction-clock.finished {
@@ -72,16 +84,32 @@
   animation: none;
 }
 
+.auction-clock.lobby-mode {
+  border-color: rgba(130, 200, 255, 0.55);
+  animation: clockAura 2.2s ease-in-out infinite;
+}
+
+.auction-clock.lobby-mode .clock-value {
+  color: #d4f2ff;
+  text-shadow:
+    0 0 14px rgba(120, 210, 255, 0.65),
+    0 0 26px rgba(100, 180, 255, 0.45);
+}
+
 @media (max-width: 640px) {
   :host {
     top: 0.7rem;
-    left: 0.6rem;
+    left: 1.15rem;
     right: 0.6rem;
     width: auto;
   }
 
   .clock-value {
     font-size: clamp(1.85rem, 9vw, 2.45rem);
+  }
+
+  .auction-clock.critical .clock-value {
+    font-size: clamp(2.35rem, 12vw, 3.35rem);
   }
 }
 
@@ -98,11 +126,32 @@
 @keyframes clockCritical {
   0%,
   100% {
-    transform: scale(1);
+    transform: scale(1.05);
     opacity: 1;
   }
-  50% {
-    transform: scale(1.03);
-    opacity: 0.82;
+  40% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+  55% {
+    transform: scale(1.18);
+    opacity: 0.88;
+  }
+  70% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+@keyframes criticalDigit {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.06);
+  }
+  55% {
+    transform: scale(1.14);
   }
 }

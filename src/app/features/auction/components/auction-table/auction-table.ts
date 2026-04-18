@@ -1,13 +1,29 @@
 import { Component, Input } from '@angular/core';
 
+import { RoomPhase } from '../../../../store/auction/auction.state';
+
 @Component({
   selector: 'app-auction-table',
   standalone: true,
   templateUrl: './auction-table.html',
-  styleUrl: './auction-table.css'
+  styleUrl: './auction-table.css',
 })
 export class AuctionTableComponent {
   @Input() price!: number;
-  @Input() status: 'ACTIVE' | 'FINISHED' = 'ACTIVE';
+  @Input() phase: RoomPhase = 'LOBBY';
   @Input() lastBidder = '';
+  @Input() seatTop: string | null = null;
+  @Input() seatLeft: string | null = null;
+  @Input() seatRight: string | null = null;
+  @Input() youName = '';
+
+  statusLabel(): string {
+    if (this.phase === 'LOBBY') {
+      return 'En sala de espera';
+    }
+    if (this.phase === 'LIVE') {
+      return 'En vivo';
+    }
+    return 'Finalizada';
+  }
 }

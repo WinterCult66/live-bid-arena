@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BidConsole } from './bid-console';
+import { BidConsoleComponent } from './bid-console';
 
-describe('BidConsole', () => {
-  let component: BidConsole;
-  let fixture: ComponentFixture<BidConsole>;
+describe('BidConsoleComponent', () => {
+  let component: BidConsoleComponent;
+  let fixture: ComponentFixture<BidConsoleComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BidConsole],
+      imports: [BidConsoleComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(BidConsole);
+    fixture = TestBed.createComponent(BidConsoleComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

@@ -1,16 +1,41 @@
 <div class="console">
   <p class="title">
-    {{ status === 'FINISHED' ? 'Subasta finalizada' : 'Haz tu jugada' }}
+    @if (status === 'FINISHED') {
+      Subasta finalizada
+    } @else if (isDisabled) {
+      Pujas desactivadas hasta la fase en vivo (2+ jugadores y fin del minuto de espera)
+    } @else {
+      Haz tu jugada
+    }
   </p>
 
+  @if (!isDisabled && status !== 'FINISHED') {
+    <p class="wallet-hint">Disponible para pujar en esta mesa: <strong>${{ remainingForBids }}</strong></p>
+  }
+
   <div class="actions">
-    <button class="bid-button bid-10" (click)="bid.emit(10)" [disabled]="isDisabled">
+    <button
+      class="bid-button bid-10"
+      type="button"
+      (click)="bid.emit(10)"
+      [disabled]="cannotBid(10)"
+    >
       +10
     </button>
-    <button class="bid-button bid-50" (click)="bid.emit(50)" [disabled]="isDisabled">
+    <button
+      class="bid-button bid-50"
+      type="button"
+      (click)="bid.emit(50)"
+      [disabled]="cannotBid(50)"
+    >
       +50
     </button>
-    <button class="bid-button bid-100" (click)="bid.emit(100)" [disabled]="isDisabled">
+    <button
+      class="bid-button bid-100"
+      type="button"
+      (click)="bid.emit(100)"
+      [disabled]="cannotBid(100)"
+    >
       +100
     </button>
   </div>

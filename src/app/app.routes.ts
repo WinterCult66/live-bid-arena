@@ -2,14 +2,13 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
-    path: 'auction',
+    path: '',
     loadComponent: () =>
-      import('./features/auction/pages/arena/arena')
-        .then(m => m.ArenaComponent)
+      import('./features/lobby/lobby').then((m) => m.LobbyComponent),
   },
   {
-    path: '',
-    redirectTo: 'auction',
-    pathMatch: 'full'
-  }
+    path: 'auction/:auctionId',
+    loadComponent: () =>
+      import('./features/auction/pages/arena/arena').then((m) => m.ArenaComponent),
+  },
 ];

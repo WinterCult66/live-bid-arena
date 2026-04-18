@@ -1,7 +1,7 @@
 .console {
   position: relative;
   width: min(94vw, 660px);
-  margin: 0 auto;
+  margin: 2.65rem auto 0;
   padding: 1.15rem 1.1rem 1.25rem;
   border-radius: 1.1rem;
   border: 1px solid rgba(149, 220, 255, 0.35);
@@ -19,6 +19,17 @@
   letter-spacing: 0.12em;
   font-size: 0.92rem;
   color: rgba(175, 241, 255, 0.9);
+}
+
+.wallet-hint {
+  margin: 0 0 0.85rem;
+  font-size: 0.95rem;
+  color: rgba(210, 245, 255, 0.88);
+}
+
+.wallet-hint strong {
+  color: #b8ffc8;
+  font-size: 1.05rem;
 }
 
 .actions {

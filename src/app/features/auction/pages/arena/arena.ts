@@ -1,53 +1,129 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Observable, Subscription, interval } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
+import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { combineLatest, filter, map, Subscription, take } from 'rxjs';
 
 import { BidConsoleComponent } from '../../components/bid-console/bid-console';
 import { AuctionTableComponent } from '../../components/auction-table/auction-table';
 import { AuctionClockComponent } from '../../components/auction-clock/auction-clock';
 
-import { placeBid, timerTick } from '../../../../store/auction.actions';
-import { AuctionState } from '../../../../store/auction.state';
-
-interface AppState {
-  auction: AuctionState;
-}
+import { connectArena, disconnectArena, placeBid } from '../../../../store/auction/auction.actions';
+import { AuctionState } from '../../../../store/auction/auction.state';
+import { loadLobby } from '../../../../store/lobby/lobby.actions';
+import { AppState } from '../../../../store/app.state';
+import { Player } from '../../../../shared/models/catalog.models';
 
 @Component({
   selector: 'app-arena',
   standalone: true,
-  imports: [AsyncPipe, BidConsoleComponent, AuctionTableComponent, AuctionClockComponent],
+  imports: [
+    AsyncPipe,
+    RouterLink,
+    BidConsoleComponent,
+    AuctionTableComponent,
+    AuctionClockComponent,
+  ],
   templateUrl: './arena.html',
   styleUrl: './arena.css',
 })
 export class ArenaComponent implements OnInit, OnDestroy {
+  private readonly store = inject(Store<AppState>);
+  private readonly route = inject(ActivatedRoute);
 
-  price$!: Observable<number>;
-  timeLeft$!: Observable<number>;
-  status$!: Observable<'ACTIVE' | 'FINISHED'>;
-  lastBidder$!: Observable<string>;
+  readonly auction$ = this.store.select((s) => s.auction);
+  readonly currentPlayer$ = this.store.select((s) => s.lobby.currentPlayer);
 
-  private timerSubscription?: Subscription;
+  readonly bidToast = signal<{ bidder: string; amount: number } | null>(null);
 
-  constructor(private store: Store<AppState>) {}
+  private routeSub?: Subscription;
+  private priceSub?: Subscription;
+  private bidToastTimeout?: ReturnType<typeof setTimeout>;
+  private lastPrice = 0;
 
   ngOnInit(): void {
-    this.price$ = this.store.select(state => state.auction.price);
-    this.timeLeft$ = this.store.select(state => state.auction.timeLeft);
-    this.status$ = this.store.select(state => state.auction.status);
-    this.lastBidder$ = this.store.select(state => state.auction.lastBidder);
+    this.route.queryParamMap.pipe(take(1)).subscribe((q) => {
+      const raw = q.get('playerId');
+      const playerId = raw != null && raw !== '' ? Number(raw) : 1;
+      this.store.dispatch(loadLobby({ playerId: Number.isFinite(playerId) ? playerId : 1 }));
+    });
 
-    this.timerSubscription = interval(1000).subscribe(() => {
-      this.store.dispatch(timerTick());
+    this.routeSub = combineLatest([
+      this.route.paramMap.pipe(map((p) => Number(p.get('auctionId')))),
+      this.route.queryParamMap.pipe(map((q) => {
+        const raw = q.get('playerId');
+        return raw != null && raw !== '' ? Number(raw) : 1;
+      })),
+    ])
+      .pipe(
+        filter(([auctionId, playerId]) =>
+          Number.isFinite(auctionId) && auctionId > 0 && Number.isFinite(playerId) && playerId > 0
+        )
+      )
+      .subscribe(([auctionId, playerId]) => {
+        this.lastPrice = 0;
+        this.store.dispatch(connectArena({ auctionId, playerId }));
+      });
+
+    this.priceSub = this.store.select((s) => s.auction).subscribe((a) => {
+      if (a.phase === 'LIVE') {
+        if (this.lastPrice > 0 && a.price > this.lastPrice) {
+          this.flashBidToast(a.lastBidder, a.price - this.lastPrice);
+        }
+        this.lastPrice = a.price;
+      } else {
+        this.lastPrice = a.price;
+      }
     });
   }
 
-  ngOnDestroy(): void {
-    this.timerSubscription?.unsubscribe();
+  seatLayout(
+    a: AuctionState,
+    me: Player | null
+  ): { top: string | null; left: string | null; right: string | null } {
+    if (!me?.name) {
+      return { top: null, left: null, right: null };
+    }
+    const others = a.participants.filter((n) => n !== me.name);
+    return {
+      top: others[0] ?? null,
+      left: others[1] ?? null,
+      right: others[2] ?? null,
+    };
   }
 
-  bid(amount: number) {
-    this.store.dispatch(placeBid({ amount, bidder: 'Tu' }));
+  /** Restante solo para pujas extra (servidor ya descontó la puja inicial de la mesa). */
+  remainingForBids(a: AuctionState, me: Player | null): number {
+    if (!me) {
+      return 0;
+    }
+    if (a.yourRemaining != null) {
+      return a.yourRemaining;
+    }
+    return Math.max(0, me.balance - a.initialBid);
+  }
+
+  ngOnDestroy(): void {
+    this.routeSub?.unsubscribe();
+    this.priceSub?.unsubscribe();
+    this.store.dispatch(disconnectArena());
+    if (this.bidToastTimeout) {
+      clearTimeout(this.bidToastTimeout);
+    }
+  }
+
+  bid(amount: number): void {
+    this.store.dispatch(placeBid({ amount }));
+  }
+
+  private flashBidToast(bidder: string, amount: number): void {
+    if (this.bidToastTimeout) {
+      clearTimeout(this.bidToastTimeout);
+    }
+    this.bidToast.set({ bidder, amount });
+    this.bidToastTimeout = setTimeout(() => {
+      this.bidToast.set(null);
+      this.bidToastTimeout = undefined;
+    }, 3200);
   }
 }

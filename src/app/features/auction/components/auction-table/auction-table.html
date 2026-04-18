@@ -1,39 +1,56 @@
 <div class="table-container">
   <div class="spotlight"></div>
 
-  <div class="player top">
+  <div class="player top" [class.seat-empty]="!seatTop">
     <span class="chair"></span>
-    <span class="avatar avatar-1">A</span>
-    <span class="name">Rival A</span>
+    @if (seatTop) {
+      <span class="avatar avatar-1">{{ seatTop.charAt(0) }}</span>
+      <span class="name">{{ seatTop }}</span>
+    } @else {
+      <span class="avatar avatar-empty">—</span>
+      <span class="name muted">Vacío</span>
+    }
   </div>
-  <div class="player left">
+  <div class="player left" [class.seat-empty]="!seatLeft">
     <span class="chair"></span>
-    <span class="avatar avatar-2">B</span>
-    <span class="name">Rival B</span>
+    @if (seatLeft) {
+      <span class="avatar avatar-2">{{ seatLeft.charAt(0) }}</span>
+      <span class="name">{{ seatLeft }}</span>
+    } @else {
+      <span class="avatar avatar-empty">—</span>
+      <span class="name muted">Vacío</span>
+    }
   </div>
-  <div class="player right">
+  <div class="player right" [class.seat-empty]="!seatRight">
     <span class="chair"></span>
-    <span class="avatar avatar-3">C</span>
-    <span class="name">Rival C</span>
+    @if (seatRight) {
+      <span class="avatar avatar-3">{{ seatRight.charAt(0) }}</span>
+      <span class="name">{{ seatRight }}</span>
+    } @else {
+      <span class="avatar avatar-empty">—</span>
+      <span class="name muted">Vacío</span>
+    }
   </div>
   <div class="player bottom">
     <span class="chair"></span>
-    <span class="avatar avatar-you">T</span>
-    <span class="name">Tu asiento</span>
+    <span class="avatar avatar-you">{{ youName.charAt(0) }}</span>
+    <span class="name">{{ youName }}</span>
   </div>
 
   <div class="table">
     <div class="table-inner">
       <div class="pot-label">Puja actual</div>
       <h2 class="pot-value">${{ price }}</h2>
-      <p class="status" [class.finished]="status === 'FINISHED'">
-        Estado: {{ status }}
+      <p class="status" [class.finished]="phase === 'FINISHED'">
+        Estado: {{ statusLabel() }}
       </p>
 
-      @if (status === 'FINISHED') {
+      @if (phase === 'FINISHED') {
         <p class="winner">🏆 Ganador: {{ lastBidder }}</p>
-      } @else {
+      } @else if (phase === 'LIVE') {
         <p class="leader">Lider actual: {{ lastBidder }}</p>
+      } @else {
+        <p class="leader lobby-hint">La subasta comienza al cumplirse el tiempo de espera con 2+ jugadores.</p>
       }
     </div>
   </div>

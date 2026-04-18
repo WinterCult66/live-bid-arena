@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AuctionTable } from './auction-table';
+import { AuctionTableComponent } from './auction-table';
 
-describe('AuctionTable', () => {
-  let component: AuctionTable;
-  let fixture: ComponentFixture<AuctionTable>;
+describe('AuctionTableComponent', () => {
+  let component: AuctionTableComponent;
+  let fixture: ComponentFixture<AuctionTableComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AuctionTable],
+      imports: [AuctionTableComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AuctionTable);
+    fixture = TestBed.createComponent(AuctionTableComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

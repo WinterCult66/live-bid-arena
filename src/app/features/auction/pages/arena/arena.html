@@ -5,34 +5,112 @@
   <div class="ambient ambient-left"></div>
   <div class="ambient ambient-right"></div>
 
+  <a class="back-to-lobby" routerLink="/">← Lobby</a>
+
   <header class="arena-header">
     <p class="kicker">Live Bid Arena</p>
-    <h1>Mesa de Subastas Pro</h1>
-    <p class="subtitle">Tension de poker, ritmo en tiempo real y pujas al limite.</p>
+    @if (auction$ | async; as a) {
+      <h1>{{ a.name || 'Mesa' }}</h1>
+    } @else {
+      <h1>Mesa de Subastas Pro</h1>
+    }
+    @if (auction$ | async; as a) {
+      @if (currentPlayer$ | async; as me) {
+        <p class="subtitle wallet-private">
+          <strong>{{ me.name }}</strong>
+          · Saldo catálogo ${{ me.balance }}
+          · Puja inicial reservada en esta mesa ${{ a.initialBid }}
+          @if (a.yourSpent != null) {
+            · Pujado extra ${{ a.yourSpent }}
+          }
+          @if (a.yourRemaining != null) {
+            · <span class="remain">Disponible para pujar ${{ a.yourRemaining }}</span>
+          }
+        </p>
+      } @else {
+        <p class="subtitle">Cargando perfil…</p>
+      }
+    } @else {
+      @if (currentPlayer$ | async; as me) {
+        <p class="subtitle">Conectado como <strong>{{ me.name }}</strong> · saldo ${{ me.balance }}</p>
+      } @else {
+        <p class="subtitle">Cargando perfil…</p>
+      }
+    }
   </header>
 
-  <app-auction-clock
-    [timeLeft]="(timeLeft$ | async)!"
-    [status]="(status$ | async)!"
-  ></app-auction-clock>
+  @if (auction$ | async; as a) {
+    @if (a.wsError) {
+      <p class="ws-banner" role="alert">{{ a.wsError }}</p>
+    }
+  }
+
+  @if (auction$ | async; as a) {
+    <app-auction-clock
+      [phase]="a.phase"
+      [lobbyTimeLeft]="a.lobbyTimeLeft"
+      [bidTimeLeft]="a.timeLeft"
+      [status]="a.status"
+    ></app-auction-clock>
+  }
 
   <aside class="debug-panel">
-    <p class="debug-title">Debug Flux</p>
-    <p>Estado: <strong>{{ (status$ | async) }}</strong></p>
-    <p>Tiempo: <strong>{{ (timeLeft$ | async) }}s</strong></p>
-    <p>Precio: <strong>${{ (price$ | async) }}</strong></p>
-    <p>Ultimo postor: <strong>{{ (lastBidder$ | async) }}</strong></p>
+    <p class="debug-title">Estado Flux (servidor)</p>
+    @if (auction$ | async; as a) {
+      <p>WS: <strong>{{ a.connection }}</strong></p>
+      <p>Fase: <strong>{{ a.phase }}</strong></p>
+      <p>Estado: <strong>{{ a.status }}</strong></p>
+      <p>Lobby: <strong>{{ a.lobbyTimeLeft }}s</strong></p>
+      <p>Ronda: <strong>{{ a.timeLeft }}s</strong></p>
+      <p>Precio: <strong>${{ a.price }}</strong></p>
+      <p>Ultimo postor: <strong>{{ a.lastBidder }}</strong></p>
+    }
   </aside>
 
-  <app-auction-table
-    [price]="(price$ | async)!"
-    [status]="(status$ | async)!"
-    [lastBidder]="(lastBidder$ | async)!"
-  ></app-auction-table>
+  @if (auction$ | async; as a) {
+    @if (currentPlayer$ | async; as me) {
+      <app-auction-table
+        [price]="a.price"
+        [phase]="a.phase"
+        [lastBidder]="a.lastBidder"
+        [seatTop]="seatLayout(a, me).top"
+        [seatLeft]="seatLayout(a, me).left"
+        [seatRight]="seatLayout(a, me).right"
+        [youName]="me.name"
+      ></app-auction-table>
+    }
+  }
 
-  <app-bid-console
-    [isDisabled]="(status$ | async) === 'FINISHED'"
-    [status]="(status$ | async)!"
-    (bid)="bid($event)"
-  ></app-bid-console>
+  @if (auction$ | async; as a) {
+    @if (a.phase === 'FINISHED') {
+      @if (currentPlayer$ | async; as me) {
+        <div class="finished-actions">
+          <a class="btn-back-lobby" [routerLink]="['/']" [queryParams]="{ playerId: me.id }">
+            Volver al lobby
+          </a>
+        </div>
+      }
+    }
+  }
+
+  @if (auction$ | async; as a) {
+    @if (currentPlayer$ | async; as me) {
+      <app-bid-console
+        [isDisabled]="a.phase !== 'LIVE' || a.connection !== 'open'"
+        [status]="a.phase === 'FINISHED' ? 'FINISHED' : 'ACTIVE'"
+        [remainingForBids]="remainingForBids(a, me)"
+        (bid)="bid($event)"
+      ></app-bid-console>
+    }
+  }
+
+  @if (bidToast(); as toast) {
+    <div class="bid-toast-anchor" role="status" aria-live="polite">
+      <div class="bid-toast">
+        <span class="bid-toast-user">{{ toast.bidder }}</span>
+        <span class="bid-toast-action">subió</span>
+        <span class="bid-toast-amount">+{{ toast.amount }}</span>
+      </div>
+    </div>
+  }
 </section>
