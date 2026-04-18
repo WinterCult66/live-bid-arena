@@ -92,7 +92,18 @@ export class ArenaComponent implements OnInit, OnDestroy {
     };
   }
 
-  /** Restante solo para pujas extra (servidor ya descontó la puja inicial de la mesa). */
+  /**
+   * Lo comprometido en tu saldo para esta mesa: puja inicial reservada + tus incrementos.
+   * Coincide con initialBid + yourSpent (el servidor envía yourCommittedTotal).
+   */
+  committedInTable(a: AuctionState): number {
+    if (a.yourCommittedTotal != null) {
+      return a.yourCommittedTotal;
+    }
+    return a.initialBid + (a.yourSpent ?? 0);
+  }
+
+  /** Saldo que aún podés usar en incrementos en esta mesa (catálogo − comprometido). */
   remainingForBids(a: AuctionState, me: Player | null): number {
     if (!me) {
       return 0;
@@ -100,7 +111,28 @@ export class ArenaComponent implements OnInit, OnDestroy {
     if (a.yourRemaining != null) {
       return a.yourRemaining;
     }
-    return Math.max(0, me.balance - a.initialBid);
+    const spent = a.yourSpent ?? 0;
+    return Math.max(0, me.balance - a.initialBid - spent);
+  }
+
+  /** Subida del precio desde la puja inicial hasta la oferta actual (= suma de incrementos de la ronda). */
+  subidaPrecioDesdeBase(a: AuctionState): number {
+    if (a.tableIncrementTotal != null && Number.isFinite(a.tableIncrementTotal)) {
+      return a.tableIncrementTotal;
+    }
+    return Math.max(0, a.price - a.initialBid);
+  }
+
+  /** El último postor “lleva” la oferta: ve la subida acumulada del precio; el resto solo su aporte desde su saldo. */
+  isUltimoPostor(a: AuctionState, me: Player | null): boolean {
+    if (!me?.name) {
+      return false;
+    }
+    const leader = a.lastBidder?.trim();
+    if (!leader || leader === 'Sin pujas') {
+      return false;
+    }
+    return me.name === leader;
   }
 
   ngOnDestroy(): void {

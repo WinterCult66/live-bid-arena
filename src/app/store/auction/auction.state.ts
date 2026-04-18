@@ -9,6 +9,8 @@ export interface AuctionState {
   name: string;
   initialBid: number;
   price: number;
+  /** Suma de todas las pujas incrementales en la mesa (= price - initialBid). No es lo que pagó un solo jugador. */
+  tableIncrementTotal: number;
   lastBidder: string;
   /** Tiempo de cierre de ronda (solo LIVE). */
   timeLeft: number;
@@ -19,6 +21,8 @@ export interface AuctionState {
   participants: string[];
   /** Solo tu jugador (viene en cada mensaje STATE personalizado por WebSocket). */
   yourSpent: number | null;
+  /** Puja inicial de la mesa + tus incrementos (comprometido de tu saldo en esta mesa). */
+  yourCommittedTotal: number | null;
   yourRemaining: number | null;
   connection: AuctionConnection;
   wsError: string | null;
@@ -29,6 +33,7 @@ export const initialAuctionState: AuctionState = {
   name: '',
   initialBid: 0,
   price: 0,
+  tableIncrementTotal: 0,
   lastBidder: '—',
   timeLeft: 0,
   lobbyTimeLeft: 0,
@@ -36,6 +41,7 @@ export const initialAuctionState: AuctionState = {
   status: 'WAITING',
   participants: [],
   yourSpent: null,
+  yourCommittedTotal: null,
   yourRemaining: null,
   connection: 'idle',
   wsError: null,

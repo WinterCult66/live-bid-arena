@@ -46,6 +46,7 @@ export class ArenaBridgeService {
             name: String(data['name'] ?? ''),
             initialBid: Number(data['initialBid'] ?? 0),
             price: Number(data['price'] ?? 0),
+            tableIncrementTotal: Number(data['tableIncrementTotal'] ?? 0),
             timeLeft: Number(data['timeLeft'] ?? 0),
             lobbyTimeLeft: Number(data['lobbyTimeLeft'] ?? 0),
             phase,
@@ -54,8 +55,9 @@ export class ArenaBridgeService {
             participants: Array.isArray(data['participants'])
               ? (data['participants'] as string[])
               : [],
-            yourSpent: parseOptionalNumber(data['yourSpent']),
-            yourRemaining: parseOptionalNumber(data['yourRemaining']),
+            yourSpent: pickOptionalNumber(data, 'yourSpent'),
+            yourCommittedTotal: pickOptionalNumber(data, 'yourCommittedTotal'),
+            yourRemaining: pickOptionalNumber(data, 'yourRemaining'),
           })
         );
       }
@@ -97,6 +99,14 @@ function parseOptionalNumber(raw: unknown): number | null {
   }
   const n = Number(raw);
   return Number.isFinite(n) ? n : null;
+}
+
+/** Si la clave no viene en el JSON, no tocar el valor en el store (evita borrar datos personales). */
+function pickOptionalNumber(data: Record<string, unknown>, key: string): number | null | undefined {
+  if (!(key in data)) {
+    return undefined;
+  }
+  return parseOptionalNumber(data[key]);
 }
 
 function parsePhase(raw: unknown): RoomPhase {

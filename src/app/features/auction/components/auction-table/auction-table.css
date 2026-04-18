@@ -53,6 +53,31 @@
   color: rgba(225, 245, 255, 0.88);
 }
 
+.pot-meta {
+  margin: 0.35rem 0 0.25rem;
+  font-size: 0.92rem;
+  color: rgba(215, 240, 255, 0.92);
+  line-height: 1.35;
+}
+
+.pot-meta-hint {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: rgba(190, 220, 245, 0.75);
+}
+
+.pot-you {
+  margin: 0.4rem 0 0.5rem;
+  font-size: 0.95rem;
+  color: #c8ffd8;
+}
+
+.pot-you strong {
+  color: #e8fff0;
+}
+
 .pot-value {
   margin: 0.45rem 0;
   font-size: clamp(2.5rem, 6.2vw, 4.3rem);

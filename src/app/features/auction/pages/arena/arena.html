@@ -19,12 +19,24 @@
         <p class="subtitle wallet-private">
           <strong>{{ me.name }}</strong>
           · Saldo catálogo ${{ me.balance }}
-          · Puja inicial reservada en esta mesa ${{ a.initialBid }}
-          @if (a.yourSpent != null) {
-            · Pujado extra ${{ a.yourSpent }}
+          · Reservado puja inicial ${{ a.initialBid }}
+          @if (a.phase === 'LIVE' || a.phase === 'FINISHED') {
+            · <span class="price-rise">Subida del precio desde la base: ${{ subidaPrecioDesdeBase(a) }}</span>
+            <span class="hint-individual">(no es un fondo común: cada jugador paga solo sus pujas desde su saldo)</span>
           }
-          @if (a.yourRemaining != null) {
-            · <span class="remain">Disponible para pujar ${{ a.yourRemaining }}</span>
+          @if (a.yourSpent != null || a.yourCommittedTotal != null) {
+            · <span class="committed">Comprometido de tu saldo (inicial + tus incrementos): ${{ committedInTable(a) }}</span>
+          }
+          @if (a.yourSpent != null) {
+            @if (isUltimoPostor(a, me)) {
+              · <span class="you-lead">Como mejor postor, la subida acumulada del precio es ${{ subidaPrecioDesdeBase(a) }}</span>
+              · <span class="you-only">Descontado de tu saldo en incrementos (solo lo tuyo): ${{ a.yourSpent }}</span>
+            } @else {
+              · <span class="you-only">Tu aporte en incrementos desde tu saldo: ${{ a.yourSpent }}</span>
+            }
+          }
+          @if (a.yourRemaining != null || a.yourSpent != null || a.initialBid > 0) {
+            · <span class="remain">Disponible para seguir pujando ${{ remainingForBids(a, me) }}</span>
           }
         </p>
       } @else {
@@ -71,6 +83,9 @@
     @if (currentPlayer$ | async; as me) {
       <app-auction-table
         [price]="a.price"
+        [initialBid]="a.initialBid"
+        [tableIncrementTotal]="a.tableIncrementTotal || (a.price - a.initialBid)"
+        [yourSpent]="a.yourSpent"
         [phase]="a.phase"
         [lastBidder]="a.lastBidder"
         [seatTop]="seatLayout(a, me).top"

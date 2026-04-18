@@ -10,6 +10,11 @@ import { RoomPhase } from '../../../../store/auction/auction.state';
 })
 export class AuctionTableComponent {
   @Input() price!: number;
+  @Input() initialBid = 0;
+  /** Suma de incrementos de todos en la mesa (= price - initialBid). */
+  @Input() tableIncrementTotal = 0;
+  /** Solo lo que pujó el jugador actual (incrementos propios). */
+  @Input() yourSpent: number | null = null;
   @Input() phase: RoomPhase = 'LOBBY';
   @Input() lastBidder = '';
   @Input() seatTop: string | null = null;
@@ -25,5 +30,12 @@ export class AuctionTableComponent {
       return 'En vivo';
     }
     return 'Finalizada';
+  }
+
+  /** El mejor postor ve la subida acumulada del precio; cada uno paga solo sus incrementos. */
+  get youAreWinningBidder(): boolean {
+    const y = this.youName?.trim();
+    const l = this.lastBidder?.trim();
+    return !!y && !!l && l !== 'Sin pujas' && y === l;
   }
 }

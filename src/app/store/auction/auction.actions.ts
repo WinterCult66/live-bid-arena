@@ -20,14 +20,17 @@ export const auctionStateReceived = createAction(
     name: string;
     initialBid: number;
     price: number;
+    tableIncrementTotal: number;
     timeLeft: number;
     lobbyTimeLeft: number;
     phase: RoomPhase;
     status: AuctionUiStatus;
     lastBidder: string;
     participants: string[];
-    yourSpent: number | null;
-    yourRemaining: number | null;
+    /** Si el mensaje no trae la clave, el reducer conserva el valor anterior. */
+    yourSpent?: number | null;
+    yourCommittedTotal?: number | null;
+    yourRemaining?: number | null;
   }>()
 );
 
