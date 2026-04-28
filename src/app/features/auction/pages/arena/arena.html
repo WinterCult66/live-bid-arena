@@ -7,6 +7,7 @@
 
   <header class="arena-header">
     <p class="kicker">Live Bid Arena</p>
+    <p class="arch-chip">Shell + 2 microfrontends de dominio</p>
     @if (auction$ | async; as a) {
       <h1>{{ a.name || 'Mesa' }}</h1>
     } @else {
@@ -69,7 +70,7 @@
 
   @if (auction$ | async; as a) {
     @if (currentPlayer$ | async; as me) {
-      <app-auction-table
+      <app-mfe-auction-table
         [price]="a.price"
         [initialBid]="a.initialBid"
         [tableIncrementTotal]="a.tableIncrementTotal || (a.price - a.initialBid)"
@@ -79,18 +80,18 @@
         [seatLeft]="seatLayout(a, me).left"
         [seatRight]="seatLayout(a, me).right"
         [youName]="me.name"
-      ></app-auction-table>
+      ></app-mfe-auction-table>
     }
   }
 
   @if (auction$ | async; as a) {
     @if (currentPlayer$ | async; as me) {
-      <app-bid-console
+      <app-mfe-bid-console
         [isDisabled]="a.phase !== 'LIVE' || a.connection !== 'open'"
         [status]="a.phase === 'FINISHED' ? 'FINISHED' : 'ACTIVE'"
         [remainingForBids]="remainingForBids(a, me)"
         (bid)="bid($event)"
-      ></app-bid-console>
+      ></app-mfe-bid-console>
     }
   }
 

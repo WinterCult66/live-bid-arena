@@ -4,9 +4,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { combineLatest, filter, map, Subscription, take } from 'rxjs';
 
-import { BidConsoleComponent } from '../../components/bid-console/bid-console';
-import { AuctionTableComponent } from '../../components/auction-table/auction-table';
 import { AuctionClockComponent } from '../../components/auction-clock/auction-clock';
+import { MfeAuctionTableComponent } from '../../microfrontends/mfe-auction-table/mfe-auction-table';
+import { MfeBidConsoleComponent } from '../../microfrontends/mfe-bid-console/mfe-bid-console';
 
 import { connectArena, disconnectArena, placeBid } from '../../../../store/auction/auction.actions';
 import { AuctionState } from '../../../../store/auction/auction.state';
@@ -19,9 +19,9 @@ import { Player } from '../../../../shared/models/catalog.models';
   standalone: true,
   imports: [
     AsyncPipe,
-    BidConsoleComponent,
-    AuctionTableComponent,
     AuctionClockComponent,
+    MfeAuctionTableComponent,
+    MfeBidConsoleComponent,
   ],
   templateUrl: './arena.html',
   styleUrl: './arena.css',

@@ -1,0 +1,11 @@
+<section class="mfe-card" aria-label="Microfrontend Puja">
+  <p class="mfe-tag">MFE Puja</p>
+  <p class="hint">Disponible actual: ${{ remainingForBids }}</p>
+
+  <app-bid-console
+    [isDisabled]="isDisabled"
+    [status]="status"
+    [remainingForBids]="remainingForBids"
+    (bid)="bid.emit($event)"
+  ></app-bid-console>
+</section>

@@ -1,0 +1,31 @@
+:host {
+  display: block;
+}
+
+.mfe-card {
+  position: relative;
+}
+
+.mfe-tag {
+  position: absolute;
+  top: -0.7rem;
+  left: 1.2rem;
+  z-index: 6;
+  margin: 0;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #130410;
+  background: linear-gradient(135deg, #ff9be5, #ffc68e);
+  box-shadow: 0 0 14px rgba(255, 155, 229, 0.4);
+}
+
+.hint {
+  margin: 0 0 0.35rem;
+  text-align: center;
+  font-size: 0.86rem;
+  color: rgba(225, 241, 255, 0.9);
+}
